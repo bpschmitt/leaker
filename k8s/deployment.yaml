@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: leaker-service
+spec:
+  selector:
+    app: leaker
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: leaker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leaker
+  template:
+    metadata:
+      labels:
+        app: leaker
+    spec:
+      containers:
+        - name: leaker-container
+          image: bschmitt769/leaker:0.1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "64Mi"
+            limits:
+              memory: "128Mi"
+
